@@ -1,0 +1,7 @@
+mynotes
+vendor
+tests/smoke.php
+/.phpunit.cache/
+/.php-cs-fixer.cache
+/.phpstan.cache/
+/.vscode/

@@ -1,0 +1,310 @@
+:root {
+    --bg:      #f6f7f9;
+    --surface: #ffffff;
+    --text:    #1c2024;
+    --muted:   #6b7280;
+    --border:  #dfe3e8;
+    --accent:  #2563eb;
+    --danger:  #b42318;
+    --ok:      #067647;
+
+    --radius: 6px;
+    --gap:    1rem;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0 var(--gap) 3rem;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0.5rem;
+}
+
+a {
+    color: var(--accent);
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0;
+}
+
+/* ---------- header ---------- */
+
+.topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.topbar > a:first-child {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text);
+}
+
+.topbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap);
+}
+
+.topbar nav a {
+    text-decoration: none;
+}
+
+.topbar nav a:hover {
+    text-decoration: underline;
+}
+
+form.inline {
+    display: inline;
+}
+
+form.inline button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent);
+    font: inherit;
+    cursor: pointer;
+}
+
+form.inline button:hover {
+    text-decoration: underline;
+}
+
+/* ---------- messages ---------- */
+
+.flash,
+.errors {
+    max-width: 1100px;
+    margin: var(--gap) auto;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.flash {
+    border-left: 3px solid var(--ok);
+}
+
+.errors {
+    border-left: 3px solid var(--danger);
+    color: var(--danger);
+    list-style: none;
+}
+
+.errors li + li {
+    margin-top: 0.3rem;
+}
+
+.thank-you {
+    font-size: 1.1rem;
+    color: var(--ok);
+}
+
+/* ---------- forms ---------- */
+
+form {
+    margin: var(--gap) 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+input,
+select,
+button {
+    font: inherit;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+    display: block;
+    width: 100%;
+    max-width: 22rem;
+    margin-bottom: 0.9rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: inherit;
+}
+
+button[type="submit"] {
+    padding: 0.55rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    filter: brightness(0.93);
+}
+
+button[disabled] {
+    opacity: 0.6;
+    cursor: default;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Filter bars sit on one wrapping row rather than stacking. */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    padding: var(--gap);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.filters label {
+    margin-bottom: 0.2rem;
+}
+
+.filters input,
+.filters select {
+    margin-bottom: 0;
+    width: auto;
+}
+
+.filters a {
+    padding-bottom: 0.55rem;
+    font-size: 0.9rem;
+}
+
+/* ---------- tables ---------- */
+
+table {
+    width: 100%;
+    margin: var(--gap) 0;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.93rem;
+}
+
+th,
+td {
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+thead th {
+    background: #f0f2f5;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover td {
+    background: #fafbfc;
+}
+
+tfoot th,
+tfoot td {
+    border-top: 2px solid var(--border);
+    border-bottom: none;
+    font-weight: 600;
+}
+
+/* Timestamps and IPs line up when they are monospaced. */
+.events td:first-child,
+.events td:last-child,
+.report td:first-child {
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88rem;
+}
+
+.report td:not(:first-child),
+.report tfoot td {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.report th:not(:first-child) {
+    text-align: right;
+}
+
+/* ---------- pagination ---------- */
+
+.pager {
+    display: flex;
+    gap: var(--gap);
+    margin: var(--gap) 0;
+}
+
+/* ---------- chart ---------- */
+
+.chart-wrap {
+    position: relative;
+    padding: var(--gap);
+    margin: var(--gap) 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+/* ---------- narrow screens ---------- */
+
+@media (max-width: 700px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        max-width: none;
+    }
+}

@@ -1,0 +1,88 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Auth\AuthService;
+use App\Auth\EmailAlreadyTakenException;
+use App\Auth\PdoUserRepository;
+use App\Auth\RegistrationValidator;
+use App\Auth\Role;
+use App\Shared\ConnectionFactory;
+use App\Shared\SystemClock;
+use App\Tracking\EventSeeder;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$command = $argv[1] ?? '';
+
+switch ($command) {
+    case 'user:create':
+        exit(createUser(array_slice($argv, 2)));
+
+    case 'events:seed':
+        exit(seedEvents(array_slice($argv, 2)));
+
+    default:
+        fwrite(STDERR, <<<TXT
+        Usage:
+          bin/console user:create <email> <password> [admin|user]
+          bin/console events:seed [events] [days] [users]
+
+        TXT);
+        exit(1);
+}
+
+/**
+ * @param list<string> $args
+ */
+function createUser(array $args): int
+{
+    $email = $args[0] ?? '';
+    $password = $args[1] ?? '';
+    $role = Role::tryFrom($args[2] ?? 'user') ?? Role::User;
+    $errors = (new RegistrationValidator())->validate($email, $password, $password);
+    if ([] !== $errors) {
+        fwrite(STDERR, implode("\n", $errors) . "\n");
+
+        return 1;
+    }
+    $auth = new AuthService(new PdoUserRepository(ConnectionFactory::create()), new SystemClock());
+    try {
+        $id = $auth->register($email, $password, $role);
+    } catch (EmailAlreadyTakenException) {
+        fwrite(STDERR, "That email is already registered.\n");
+
+        return 1;
+    }
+    printf("Created user %s (id %d) with role %s\n", $email, $id, $role->value);
+
+    return 0;
+}
+
+/**
+ * @param list<string> $args
+ */
+function seedEvents(array $args): int
+{
+    $events = (int) ($args[0] ?? 1_000_000);
+    $days = (int) ($args[1] ?? 90);
+    $users = (int) ($args[2] ?? 50);
+    printf("Seeding %s events for %d days for %d users...\n", number_format($events), $days, $users);
+    $started = microtime(true);
+    (new EventSeeder(ConnectionFactory::create()))->seed(
+        $events,
+        $days,
+        $users,
+        static function (int $done, int $total) use ($started): void {
+            if ($done % 50_000 !== 0 && $done !== $total) {
+                return;
+            }
+
+            printf("  %s / %s  (%.0fs)\n", number_format($done), number_format($total), microtime(true) - $started);
+        },
+    );
+    printf("Done in %.1fs\n", microtime(true) - $started);
+
+    return 0;
+}
